@@ -20,7 +20,8 @@ RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist --no-in
 FROM php:8.3-apache
 RUN apt-get update && apt-get install -y --no-install-recommends libzip-dev unzip \
     && docker-php-ext-install pdo_mysql opcache \
-    && a2enmod rewrite headers \
+    && a2dismod -f mpm_event mpm_worker || true \
+    && a2enmod mpm_prefork rewrite headers \
     && rm -rf /var/lib/apt/lists/*
 
 ENV APACHE_DOCUMENT_ROOT=/var/www/html/public
