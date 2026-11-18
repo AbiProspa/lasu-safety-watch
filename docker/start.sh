@@ -4,6 +4,13 @@ set -e
 cd /var/www/html
 
 PORT="${PORT:-8080}"
+
+# Hosted MySQL (e.g. Aiven) needs an encrypted connection: paste the provider's
+# CA certificate into the MYSQL_SSL_CA_CERT variable and it is used automatically.
+if [ -n "$MYSQL_SSL_CA_CERT" ]; then
+    printf '%s\n' "$MYSQL_SSL_CA_CERT" > /var/www/html/storage/mysql-ca.pem
+    export MYSQL_ATTR_SSL_CA=/var/www/html/storage/mysql-ca.pem
+fi
 sed -i "s/^Listen .*/Listen ${PORT}/" /etc/apache2/ports.conf
 sed -i "s/<VirtualHost \*:[0-9]*>/<VirtualHost *:${PORT}>/" /etc/apache2/sites-available/000-default.conf
 

@@ -1,130 +1,163 @@
 @extends('layouts.public')
 
+{{-- Design rules: .claude/CLAUDE.md (civic, high-trust; no bento grids, no background patterns, red only for SOS) --}}
+
 @section('content')
-{{-- HERO --}}
-<section class="relative overflow-hidden bg-brand-950">
-    <div class="absolute inset-0 opacity-30" style="background-image: radial-gradient(circle at 20% 20%, #10b981 0, transparent 40%), radial-gradient(circle at 85% 70%, #0b8a5f 0, transparent 45%);"></div>
-    <div class="absolute inset-0 opacity-[0.07]" style="background-image: linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px); background-size: 40px 40px;"></div>
-    <div class="container-app relative grid items-center gap-12 py-16 lg:grid-cols-2 lg:py-24">
-        <div>
-            <span class="inline-flex items-center gap-2 rounded-full border border-white/15 bg-white/10 px-3 py-1 text-xs font-semibold text-brand-100">
-                <span class="size-2 rounded-full bg-brand-500"></span> Lagos State University · Ojo Campus
-            </span>
-            <h1 class="mt-5 text-4xl font-extrabold leading-tight tracking-tight text-white sm:text-5xl">
-                A safer campus starts with <span class="bg-gradient-to-r from-brand-200 to-emerald-300 bg-clip-text text-transparent">one report.</span>
-            </h1>
-            <p class="mt-5 max-w-xl text-lg text-brand-100/80">
-                Report theft, cult activity, harassment, broken facilities or flooding in under a minute. It goes straight to the right LASU unit, and you can stay anonymous.
+{{-- ============ HERO: asymmetric 60/40 ============ --}}
+<section class="border-b border-line bg-surface">
+    <div class="container-app grid items-start gap-10 py-12 sm:py-16 lg:grid-cols-[3fr_2fr] lg:gap-14 lg:py-20">
+
+        {{-- Left: value proposition --}}
+        <div class="lg:pt-6">
+            <p class="flex items-center gap-2 text-sm font-semibold text-muted">
+                <span class="size-2 rounded-full bg-brand-500"></span>
+                Lagos State University · Ojo Campus
             </p>
-            <div class="mt-8 flex flex-wrap gap-3">
-                <a href="{{ route('report.create') }}" class="btn bg-white px-5 py-3 text-brand-800 shadow-lg hover:bg-brand-50">
-                    <x-icon name="alert" class="size-5" /> Report an incident
+
+            <h1 class="mt-5 text-[2.5rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-ink sm:text-6xl">
+                <span class="block">Report it.</span>
+                <span class="block text-brand-700">We'll act on it.</span>
+            </h1>
+
+            <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+                Theft, cult activity, harassment, broken facilities or flooding on campus: send it in under a minute.
+                It goes straight to the LASU unit responsible, and you can stay anonymous.
+            </p>
+
+            <div class="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-6">
+                <a href="{{ route('report.create') }}" class="btn-primary btn-lg">
+                    Report an Incident <x-icon name="arrow-right" class="size-5" />
                 </a>
-                <a href="{{ route('safety') }}#sos" class="btn bg-red-600 px-5 py-3 text-white shadow-lg hover:bg-red-700">
-                    <x-icon name="siren" class="size-5" /> Emergency SOS
-                </a>
-                <a href="{{ route('map') }}" class="btn border border-white/20 px-5 py-3 text-white hover:bg-white/10">
-                    <x-icon name="map" class="size-5" /> View live map
+                <a href="{{ route('track') }}" class="inline-flex min-h-12 items-center justify-center gap-1.5 font-semibold text-brand-700 underline-offset-4 hover:underline sm:justify-start">
+                    Track existing report
                 </a>
             </div>
-            <div class="mt-8 flex flex-wrap items-center gap-x-6 gap-y-2 text-sm text-brand-100/70">
-                <span class="flex items-center gap-1.5"><x-icon name="eye-off" class="size-4" /> Anonymous reporting</span>
-                <span class="flex items-center gap-1.5"><x-icon name="bolt" class="size-4" /> Goes to the right unit instantly</span>
-                <span class="flex items-center gap-1.5"><x-icon name="search" class="size-4" /> Track with a code</span>
-            </div>
+
+            <ul class="mt-10 flex flex-col gap-3 text-sm text-muted sm:flex-row sm:flex-wrap sm:gap-x-6">
+                <li class="flex items-center gap-2"><x-icon name="check" class="size-4 text-brand-600" />No login needed</li>
+                <li class="flex items-center gap-2"><x-icon name="check" class="size-4 text-brand-600" />Anonymous option</li>
+                <li class="flex items-center gap-2"><x-icon name="check" class="size-4 text-brand-600" />Every report gets a tracking code</li>
+            </ul>
         </div>
 
-        {{-- Stats card --}}
-        <div class="grid grid-cols-2 gap-4">
-            @foreach ([
-                ['Reports received', $stats['total'], 'list'],
-                ['Resolved', $stats['resolved'], 'check'],
-                ['This week', $stats['this_week'], 'clock'],
-                ['Avg. resolution', $stats['avg_hours'] !== null ? $stats['avg_hours'].'h' : '-', 'bolt'],
-            ] as [$label, $value, $icon])
-                <div class="rounded-2xl border border-white/10 bg-white/[0.06] p-5 backdrop-blur">
-                    <span class="grid size-10 place-items-center rounded-xl bg-white/10 text-brand-200"><x-icon :name="$icon" /></span>
-                    <p class="mt-4 text-3xl font-extrabold text-white">{{ $value }}</p>
-                    <p class="text-sm text-brand-100/70">{{ $label }}</p>
-                </div>
-            @endforeach
-        </div>
-    </div>
-</section>
-
-{{-- WHAT CAN I REPORT --}}
-<section class="container-app py-16">
-    <div class="max-w-2xl">
-        <p class="text-sm font-bold uppercase tracking-wider text-brand-700">What can I report?</p>
-        <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">Every report goes to the unit that can fix it</h2>
-    </div>
-    <div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        @foreach ($categories as $cat)
-            <a href="{{ route('report.create', ['type' => $cat->id]) }}" class="card group p-5 transition hover:-translate-y-0.5 hover:shadow-md">
-                <div class="flex items-start gap-4">
-                    <span class="grid size-12 shrink-0 place-items-center rounded-2xl text-white" style="background: {{ $cat->color }}">
-                        <x-icon :name="$cat->icon" class="size-6" />
+        {{-- Right: interactive quick-report selector + live campus status --}}
+        <div x-data="{ sel: null }" class="card overflow-hidden">
+            <div class="border-b border-line px-5 py-4">
+                <div class="flex items-center justify-between gap-3">
+                    <h2 class="text-base font-bold text-ink">What do you need to report?</h2>
+                    <span class="flex items-center gap-1.5 text-xs font-semibold text-brand-600">
+                        <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-brand-500 opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-brand-500"></span></span>
+                        Live
                     </span>
-                    <div>
-                        <h3 class="font-bold text-slate-900">{{ $cat->name }}
-                            @if ($cat->is_confidential)<span class="badge ml-1 bg-purple-50 text-purple-700"><x-icon name="lock" class="size-3" />Confidential</span>@endif
-                        </h3>
-                        <p class="mt-1 text-sm text-slate-500">{{ $cat->description }}</p>
-                        <p class="mt-3 text-xs font-semibold text-slate-400">Handled by {{ $cat->unitLabel() }}</p>
-                    </div>
                 </div>
-            </a>
-        @endforeach
-    </div>
-</section>
+                <p class="mt-1 font-mono text-xs text-muted">
+                    {{ $stats['open'] }} open {{ Str::plural('case', $stats['open']) }}
+                    @if ($stats['last_report']) · last report {{ $stats['last_report']->diffForHumans() }} @endif
+                </p>
+            </div>
 
-{{-- HOW IT WORKS --}}
-<section class="border-y border-slate-200 bg-white">
-    <div class="container-app py-16">
-        <p class="text-sm font-bold uppercase tracking-wider text-brand-700">How it works</p>
-        <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">From report to resolution</h2>
-        <div class="mt-10 grid gap-8 md:grid-cols-4">
-            @foreach ([
-                ['1', 'Report', 'Describe what happened, pin the location and add a photo. Login is optional.'],
-                ['2', 'Get a code', 'You receive a tracking code like LSW-7K3P9Q to follow progress.'],
-                ['3', 'Verified & assigned', 'The responsible unit verifies the report and assigns an officer.'],
-                ['4', 'Resolved', 'You can see every update until the issue is closed.'],
-            ] as [$n, $h, $p])
-                <div class="relative">
-                    <span class="grid size-11 place-items-center rounded-full bg-brand-700 text-lg font-extrabold text-white ring-8 ring-brand-50">{{ $n }}</span>
-                    <h3 class="mt-4 font-bold text-slate-900">{{ $h }}</h3>
-                    <p class="mt-1 text-sm text-slate-500">{{ $p }}</p>
-                </div>
-            @endforeach
+            <ul class="divide-y divide-line">
+                @foreach ($categories as $c)
+                    <li>
+                        <button type="button" @click="sel = sel === {{ $c->id }} ? null : {{ $c->id }}" :aria-expanded="sel === {{ $c->id }}"
+                                class="flex min-h-16 w-full items-center gap-3 px-5 py-3 text-left transition hover:bg-surface focus-visible:bg-surface focus-visible:outline-none"
+                                :class="sel === {{ $c->id }} && 'bg-surface'">
+                            <span class="grid size-10 shrink-0 place-items-center rounded-lg bg-brand-50 text-brand-700"><x-icon :name="$c->icon" /></span>
+                            <span class="min-w-0 flex-1">
+                                <span class="flex items-center gap-1.5 font-semibold text-ink">
+                                    {{ $c->name }}
+                                    @if ($c->is_confidential)<x-icon name="lock" class="size-3.5 text-muted" />@endif
+                                </span>
+                                <span class="block truncate text-xs text-muted">{{ $c->unitLabel() }}</span>
+                            </span>
+                            <span class="font-mono text-xs text-muted">{{ $openByCategory[$c->id] ?? 0 }} open</span>
+                            <x-icon name="arrow-right" class="size-4 shrink-0 text-muted transition" x-bind:class="sel === {{ $c->id }} && 'rotate-90'" />
+                        </button>
+                        <div x-show="sel === {{ $c->id }}" x-cloak class="bg-surface px-5 pb-4">
+                            <p class="mb-2 text-xs font-semibold text-muted">Choose what happened:</p>
+                            <div class="flex flex-wrap gap-2">
+                                @foreach (($c->subtypes ?? []) as $sub)
+                                    <a href="{{ route('report.create', ['type' => $c->id, 'subtype' => $sub]) }}"
+                                       class="inline-flex min-h-11 items-center rounded-lg border border-line bg-white px-3 text-sm font-medium text-ink hover:border-brand-600 hover:text-brand-700">{{ $sub }}</a>
+                                @endforeach
+                            </div>
+                        </div>
+                    </li>
+                @endforeach
+            </ul>
+
+            <p class="flex items-start gap-2 border-t border-line px-5 py-3 text-xs text-muted">
+                <x-icon name="lock" class="mt-0.5 size-3.5 shrink-0" />
+                Harassment & GBV reports are always anonymous and never shown publicly.
+            </p>
         </div>
     </div>
 </section>
 
-{{-- RECENT --}}
+{{-- ============ METRICS: inline typographic strip ============ --}}
+<section class="border-b border-line bg-white" aria-label="Campus statistics">
+    <dl class="container-app grid grid-cols-2 gap-y-6 py-6 sm:flex sm:flex-wrap sm:items-baseline sm:gap-x-10">
+        @foreach ([
+            [$stats['total'], 'reports received'],
+            [$stats['resolved'], 'resolved'],
+            [$stats['this_week'], 'this week'],
+            [$stats['avg_hours'] !== null ? $stats['avg_hours'].'h' : '-', 'average resolution time'],
+        ] as [$value, $label])
+            <div class="flex items-baseline gap-2">
+                <dt class="sr-only">{{ $label }}</dt>
+                <dd class="font-mono text-2xl font-semibold tracking-tight text-ink">{{ $value }}</dd>
+                <span class="text-sm text-muted">{{ $label }}</span>
+            </div>
+        @endforeach
+    </dl>
+</section>
+
+{{-- ============ HOW IT WORKS ============ --}}
 <section class="container-app py-16">
+    <h2 class="text-2xl font-extrabold tracking-[-0.02em] text-ink sm:text-3xl">From report to resolution</h2>
+    <ol class="mt-8 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+        @foreach ([
+            ['Report', 'Describe what happened, pin the location, add a photo. Login is optional.'],
+            ['Get a code', 'You receive a tracking code such as LSW-7K3P9Q to follow progress.'],
+            ['Verified & assigned', 'The responsible unit checks the report and assigns an officer.'],
+            ['Resolved', 'Every update is visible on your tracking page until the case is closed.'],
+        ] as $i => [$h, $p])
+            <li class="border-t-2 border-brand-700 pt-4">
+                <span class="font-mono text-sm font-semibold text-brand-700">{{ sprintf('%02d', $i + 1) }}</span>
+                <h3 class="mt-1 text-lg font-bold text-ink">{{ $h }}</h3>
+                <p class="mt-1 text-sm leading-relaxed text-muted">{{ $p }}</p>
+            </li>
+        @endforeach
+    </ol>
+</section>
+
+{{-- ============ RECENT VERIFIED REPORTS ============ --}}
+<section class="container-app pb-4">
     <div class="flex flex-wrap items-end justify-between gap-4">
         <div>
-            <p class="text-sm font-bold uppercase tracking-wider text-brand-700">Campus activity</p>
-            <h2 class="mt-2 text-3xl font-extrabold tracking-tight text-slate-900">Recently verified reports</h2>
+            <h2 class="text-2xl font-extrabold tracking-[-0.02em] text-ink sm:text-3xl">Recently verified</h2>
+            <p class="mt-1 text-sm text-muted">Reports confirmed by LASU responders. Confidential cases are excluded.</p>
         </div>
-        <a href="{{ route('map') }}" class="btn-light">Open live map <x-icon name="arrow-right" class="size-4" /></a>
+        <a href="{{ route('map') }}" class="inline-flex min-h-12 items-center gap-1.5 font-semibold text-brand-700 underline-offset-4 hover:underline">
+            Open live map <x-icon name="arrow-right" class="size-4" />
+        </a>
     </div>
-    <div class="mt-8 grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+
+    <div class="card mt-6 divide-y divide-line">
         @forelse ($recent as $r)
-            <a href="{{ route('track', ['ref' => $r->reference]) }}" class="card flex flex-col p-5 transition hover:shadow-md">
-                <div class="flex items-center justify-between gap-2">
-                    <span class="text-xs font-bold uppercase tracking-wide" style="color: {{ $r->category->color }}">{{ $r->category->name }}</span>
-                    <x-status-badge :status="$r->status" />
+            <a href="{{ route('track', ['ref' => $r->reference]) }}" class="flex flex-col gap-2 px-5 py-4 transition hover:bg-surface sm:flex-row sm:items-center sm:gap-6">
+                <div class="min-w-0 flex-1">
+                    <p class="text-xs font-semibold uppercase tracking-wide text-muted">{{ $r->category->name }}</p>
+                    <p class="mt-0.5 font-semibold text-ink">{{ $r->title }}</p>
+                    <p class="mt-0.5 text-sm text-muted">{{ $r->location_name }} · {{ $r->created_at->diffForHumans() }}</p>
                 </div>
-                <h3 class="mt-2 font-bold text-slate-900">{{ $r->title }}</h3>
-                <p class="mt-1 flex-1 text-sm text-slate-500">{{ $r->shortDescription(100) }}</p>
-                <div class="mt-4 flex items-center gap-3 text-xs text-slate-400">
-                    <span class="flex items-center gap-1"><x-icon name="pin" class="size-3.5" />{{ $r->location_name }}</span>
-                    <span class="flex items-center gap-1"><x-icon name="clock" class="size-3.5" />{{ $r->created_at->diffForHumans() }}</span>
+                <div class="flex items-center gap-3">
+                    <span class="font-mono text-xs text-muted">{{ $r->reference }}</span>
+                    <x-status-badge :status="$r->status" />
                 </div>
             </a>
         @empty
-            <p class="text-slate-500">No verified reports yet.</p>
+            <p class="px-5 py-10 text-center text-muted">No verified reports yet.</p>
         @endforelse
     </div>
 </section>

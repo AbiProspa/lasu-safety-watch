@@ -43,7 +43,7 @@
                     <select id="subtype" name="subtype" class="input">
                         <option value="">Select…</option>
                         <template x-for="s in (current ? current.subtypes : [])" :key="s">
-                            <option :value="s" x-text="s" :selected="s === '{{ old('subtype') }}'"></option>
+                            <option :value="s" x-text="s" :selected="s === {{ Js::from(old('subtype', request('subtype'))) }}"></option>
                         </template>
                     </select>
                 </div>

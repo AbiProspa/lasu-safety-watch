@@ -1,0 +1,44 @@
+# Render Blueprint: free web service built from the Dockerfile.
+# The database is a free MySQL on Aiven (see DEPLOY-FREE.md).
+services:
+  - type: web
+    name: lasu-safety-watch
+    runtime: docker
+    plan: free
+    region: frankfurt
+    healthCheckPath: /up
+    envVars:
+      - key: APP_NAME
+        value: LASU Safety Watch
+      - key: APP_ENV
+        value: production
+      - key: APP_DEBUG
+        value: "false"
+      - key: APP_TIMEZONE
+        value: Africa/Lagos
+      - key: LOG_CHANNEL
+        value: stderr
+      - key: SESSION_DRIVER
+        value: database
+      - key: CACHE_STORE
+        value: database
+      - key: DB_CONNECTION
+        value: mysql
+      - key: SEED_DEMO_REPORTS
+        value: "true"
+      - key: APP_KEY          # php artisan key:generate --show
+        sync: false
+      - key: APP_URL          # https://<your-service>.onrender.com
+        sync: false
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        sync: false
+      - key: DB_DATABASE
+        sync: false
+      - key: DB_USERNAME
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: MYSQL_SSL_CA_CERT  # Aiven "CA certificate" (full text)
+        sync: false

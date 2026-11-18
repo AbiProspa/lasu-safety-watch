@@ -4,58 +4,59 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#0b6e4f">
+    <meta name="theme-color" content="#0B3B24">
     <title>{{ isset($title) ? $title.' · ' : '' }}LASU Safety Watch</title>
     <meta name="description" content="Campus security and incident reporting system for Lagos State University.">
     <link rel="icon" href="/favicon.svg" type="image/svg+xml">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
 <body class="flex min-h-screen flex-col">
 @php
+    // CLAUDE.md: max 4 centre links; the logo links home. One SOS button, far right.
     $links = [
-        ['home', 'Home'], ['report.create', 'Report incident'], ['map', 'Live map'],
+        ['report.create', 'Report incident'], ['map', 'Live map'],
         ['safety', 'Safety Center'], ['track', 'Track report'],
     ];
 @endphp
-<header x-data="{ open: false }" class="sticky top-0 z-[1000] border-b border-slate-200/70 bg-white/85 backdrop-blur">
-    <div class="container-app flex h-16 items-center justify-between gap-4">
+<header x-data="{ open: false }" class="sticky top-0 z-[1000] border-b border-line bg-white">
+    <div class="container-app flex h-16 items-center justify-between gap-3">
         <x-logo />
-        <nav class="hidden items-center gap-1 lg:flex">
+        <nav class="hidden items-center gap-1 lg:flex" aria-label="Main">
             @foreach ($links as [$route, $label])
                 <a href="{{ route($route) }}" class="nav-link {{ request()->routeIs($route) ? 'nav-link-active' : '' }}">{{ $label }}</a>
             @endforeach
         </nav>
-        <div class="hidden items-center gap-2 lg:flex">
-            @auth
-                @if (auth()->user()->isStaff())
-                    <a href="{{ route('staff.dashboard') }}" class="btn-light"><x-icon name="chart" class="size-4" />Dashboard</a>
+        <div class="flex items-center gap-1 sm:gap-2">
+            <div class="hidden items-center gap-1 lg:flex">
+                @auth
+                    <a href="{{ auth()->user()->isStaff() ? route('staff.dashboard') : route('reports.mine') }}" class="nav-link">{{ auth()->user()->isStaff() ? 'Dashboard' : 'My reports' }}</a>
+                    <form method="POST" action="{{ route('logout') }}">@csrf<button class="nav-link" title="Log out">Log out</button></form>
                 @else
-                    <a href="{{ route('reports.mine') }}" class="btn-light"><x-icon name="list" class="size-4" />My reports</a>
-                @endif
-                <form method="POST" action="{{ route('logout') }}">@csrf<button class="btn-ghost" title="Log out"><x-icon name="logout" class="size-4" /></button></form>
-            @else
-                <a href="{{ route('login') }}" class="btn-ghost">Log in</a>
-            @endauth
-            <a href="{{ route('safety') }}#sos" class="btn-danger"><x-icon name="siren" class="size-4" />SOS</a>
+                    <a href="{{ route('login') }}" class="nav-link">Log in</a>
+                @endauth
+            </div>
+            <a href="{{ route('safety') }}#sos" class="btn-danger min-h-11 px-3 sm:px-4" data-sos-trigger>
+                <x-icon name="siren" class="size-4" /><span class="sm:hidden">SOS</span><span class="hidden sm:inline">Emergency SOS</span>
+            </a>
+            <button class="btn-ghost min-h-11 lg:hidden" @click="open = !open" :aria-expanded="open" aria-label="Menu">
+                <x-icon name="menu" x-show="!open" /><x-icon name="x" x-show="open" x-cloak />
+            </button>
         </div>
-        <button class="btn-ghost lg:hidden" @click="open = !open" aria-label="Menu">
-            <x-icon name="menu" x-show="!open" /><x-icon name="x" x-show="open" x-cloak />
-        </button>
     </div>
-    <div x-show="open" x-cloak x-transition class="border-t border-slate-200 bg-white lg:hidden">
-        <nav class="container-app flex flex-col gap-1 py-3">
+    <div x-show="open" x-cloak x-transition class="border-t border-line bg-white lg:hidden">
+        <nav class="container-app flex flex-col py-2" aria-label="Mobile">
             @foreach ($links as [$route, $label])
-                <a href="{{ route($route) }}" class="nav-link {{ request()->routeIs($route) ? 'nav-link-active' : '' }}">{{ $label }}</a>
+                <a href="{{ route($route) }}" class="flex min-h-12 items-center rounded-lg px-3 text-base font-medium {{ request()->routeIs($route) ? 'bg-brand-50 text-brand-700' : 'text-ink' }}">{{ $label }}</a>
             @endforeach
+            <div class="my-2 border-t border-line"></div>
             @auth
-                <a href="{{ auth()->user()->isStaff() ? route('staff.dashboard') : route('reports.mine') }}" class="nav-link">{{ auth()->user()->isStaff() ? 'Dashboard' : 'My reports' }}</a>
-                <form method="POST" action="{{ route('logout') }}">@csrf<button class="nav-link w-full text-left">Log out</button></form>
+                <a href="{{ auth()->user()->isStaff() ? route('staff.dashboard') : route('reports.mine') }}" class="flex min-h-12 items-center px-3 text-base font-medium text-ink">{{ auth()->user()->isStaff() ? 'Dashboard' : 'My reports' }}</a>
+                <form method="POST" action="{{ route('logout') }}">@csrf<button class="flex min-h-12 w-full items-center px-3 text-base font-medium text-muted">Log out</button></form>
             @else
-                <a href="{{ route('login') }}" class="nav-link">Log in</a>
+                <a href="{{ route('login') }}" class="flex min-h-12 items-center px-3 text-base font-medium text-ink">Log in</a>
             @endauth
-            <a href="{{ route('safety') }}#sos" class="btn-danger mt-2"><x-icon name="siren" class="size-4" />Emergency SOS</a>
         </nav>
     </div>
 </header>
@@ -64,7 +65,7 @@
     @yield('content')
 </main>
 
-<footer class="mt-16 border-t border-slate-200 bg-white">
+<footer class="mt-16 border-t border-line bg-white">
     <div class="container-app grid gap-8 py-10 md:grid-cols-3">
         <div>
             <x-logo />

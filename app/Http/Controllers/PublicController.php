@@ -15,14 +15,20 @@ class PublicController extends Controller
         $stats = [
             'total' => Report::count(),
             'resolved' => Report::where('status', 'resolved')->count(),
+            'open' => Report::whereNotIn('status', ['resolved', 'rejected'])->count(),
             'this_week' => Report::where('created_at', '>=', now()->subDays(7))->count(),
             'avg_hours' => $this->averageResolutionHours(),
+            'last_report' => Report::latest()->value('created_at'),
         ];
 
         $recent = Report::public()->with('category')->latest()->take(6)->get();
         $categories = Category::where('slug', '!=', 'sos')->orderBy('sort')->get();
 
-        return view('public.home', compact('stats', 'recent', 'categories'));
+        // Open cases per category for the live status card
+        $openByCategory = Report::whereNotIn('status', ['resolved', 'rejected'])
+            ->selectRaw('category_id, count(*) as total')->groupBy('category_id')->pluck('total', 'category_id');
+
+        return view('public.home', compact('stats', 'recent', 'categories', 'openByCategory'));
     }
 
     public function map(): View
