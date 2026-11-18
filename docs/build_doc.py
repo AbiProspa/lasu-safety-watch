@@ -14,7 +14,7 @@ from docx.shared import Cm, Pt, RGBColor
 
 HERE = Path(__file__).parent
 NAME = "LASU_Safety_Watch_Explained"
-GREEN = RGBColor(0x0B, 0x6E, 0x4F)
+GREEN = RGBColor(0x0E, 0x2A, 0x50)  # brand navy
 
 TITLE = "LASU Safety Watch"
 SUBTITLE = ("Design and Implementation of a Web-Based Crowdsourced Security and Incident Reporting "
@@ -145,7 +145,7 @@ for item in C:
                 run = c.paragraphs[0].add_run(val); run.font.size = Pt(8.5)
                 c.paragraphs[0].paragraph_format.space_after = Pt(0)
                 if i == 0:
-                    run.bold = True; run.font.color.rgb = RGBColor(255, 255, 255); shade(c, "0B6E4F")
+                    run.bold = True; run.font.color.rgb = RGBColor(255, 255, 255); shade(c, "0E2A50")
     elif kind == "img":
         imgs = [(HERE / "screenshots" / f, cap) for f, cap in item[1] if (HERE / "screenshots" / f).exists()]
         if imgs:
@@ -196,12 +196,12 @@ flush()
 css = """
 @page { size: A4; margin: 14mm 18mm; }
 body { font-family: Calibri, 'Segoe UI', sans-serif; font-size: 9.5pt; color: #1f2a24; line-height: 1.32; }
-h1 { text-align: center; color: #0b6e4f; font-size: 18pt; margin: 0; }
+h1 { text-align: center; color: #0E2A50; font-size: 18pt; margin: 0; }
 .sub { text-align: center; font-style: italic; font-size: 10.5pt; margin: 2px 0 6px; }
-h2 { color: #0b6e4f; font-size: 12pt; margin: 9px 0 3px; }
+h2 { color: #0E2A50; font-size: 12pt; margin: 9px 0 3px; }
 p { margin: 0 0 4px; } ul { margin: 0 0 4px; padding-left: 18px; } li { margin-bottom: 2px; }
 table { width: 100%; border-collapse: collapse; margin: 3px 0 5px; font-size: 8.5pt; }
-th { background: #0b6e4f; color: #fff; text-align: left; } th, td { border: 1px solid #b9c7bf; padding: 3px 5px; vertical-align: top; }
+th { background: #0E2A50; color: #fff; text-align: left; } th, td { border: 1px solid #b8c4d6; padding: 3px 5px; vertical-align: top; }
 .figs { display: flex; gap: 10px; margin: 6px 0; } figure { margin: 0; flex: 1; text-align: center; }
 figure img { width: 100%; border: 1px solid #ccd6d0; } figcaption { font-style: italic; font-size: 8pt; }
 """

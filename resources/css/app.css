@@ -16,15 +16,17 @@
     --color-ink: #0F172A;          /* primary text */
     --color-muted: #475569;        /* secondary text */
     --color-sos: #DC2626;          /* reserved for the single SOS trigger */
-    --color-brand-50: #EEF5F1;
-    --color-brand-100: #D5E7DD;
-    --color-brand-200: #A9CDB9;
-    --color-brand-500: #2E7D57;
-    --color-brand-600: #165C3B;
-    --color-brand-700: #0B3B24;    /* primary brand green (deep forest) */
-    --color-brand-800: #082C1B;
-    --color-brand-900: #061F13;
-    --color-brand-950: #04150D;
+    /* Brand palette sampled from the LASU Safety Watch crest (public/images/logo-mark.png) */
+    --color-brand-50: #EEF3FA;
+    --color-brand-100: #D9E4F4;
+    --color-brand-200: #B2C7E8;
+    --color-brand-500: #1356B8;    /* royal blue (crest outline) - links, highlights */
+    --color-brand-600: #17468C;
+    --color-brand-700: #0E2A50;    /* primary brand navy (crest) */
+    --color-brand-800: #0A1F3D;
+    --color-brand-900: #07162C;
+    --color-brand-950: #050F1F;
+    --color-gold: #C2A563;         /* crest gold - small accents only */
     --shadow-card: 0 1px 3px rgba(0, 0, 0, 0.05);
 }
 

@@ -10,13 +10,13 @@
         {{-- Left: value proposition --}}
         <div class="lg:pt-6">
             <p class="flex items-center gap-2 text-sm font-semibold text-muted">
-                <span class="size-2 rounded-full bg-brand-500"></span>
+                <span class="size-2 rounded-full bg-gold"></span>
                 Lagos State University · Ojo Campus
             </p>
 
             <h1 class="mt-5 text-[2.5rem] font-extrabold leading-[1.1] tracking-[-0.03em] text-ink sm:text-6xl">
                 <span class="block">Report it.</span>
-                <span class="block text-brand-700">We'll act on it.</span>
+                <span class="block text-brand-500">We'll act on it.</span>
             </h1>
 
             <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted">
@@ -45,8 +45,8 @@
             <div class="border-b border-line px-5 py-4">
                 <div class="flex items-center justify-between gap-3">
                     <h2 class="text-base font-bold text-ink">What do you need to report?</h2>
-                    <span class="flex items-center gap-1.5 text-xs font-semibold text-brand-600">
-                        <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-brand-500 opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-brand-500"></span></span>
+                    <span class="flex items-center gap-1.5 text-xs font-semibold text-emerald-700">
+                        <span class="relative flex size-2"><span class="absolute inline-flex size-full animate-ping rounded-full bg-emerald-500 opacity-60"></span><span class="relative inline-flex size-2 rounded-full bg-emerald-500"></span></span>
                         Live
                     </span>
                 </div>

@@ -4,7 +4,7 @@
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
-    <meta name="theme-color" content="#0B3B24">
+    <meta name="theme-color" content="#0E2A50">
     <title>{{ isset($title) ? $title.' · ' : '' }}LASU Safety Watch</title>
     <meta name="description" content="Campus security and incident reporting system for Lagos State University.">
     <link rel="icon" href="/favicon-64.png" type="image/png">

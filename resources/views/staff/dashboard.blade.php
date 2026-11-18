@@ -100,7 +100,7 @@
     const statuses = @json($byStatus);
     lswChart(document.getElementById('trendChart'), {
         type: 'line',
-        data: { labels: trend.labels, datasets: [{ data: trend.data, label: 'Reports', borderColor: '#0b6e4f', backgroundColor: 'rgba(16,185,129,.12)', fill: true, tension: .35, pointRadius: 3 }] },
+        data: { labels: trend.labels, datasets: [{ data: trend.data, label: 'Reports', borderColor: '#1356B8', backgroundColor: 'rgba(19,86,184,.10)', fill: true, tension: .35, pointRadius: 3 }] },
         options: { maintainAspectRatio: false, plugins: { legend: { display: false } }, scales: { y: { beginAtZero: true, ticks: { precision: 0 } }, x: { grid: { display: false } } } },
     });
     lswChart(document.getElementById('catChart'), {
