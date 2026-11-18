@@ -1,5 +1,5 @@
 # Render Blueprint: free web service built from the Dockerfile.
-# The database is a free MySQL on Aiven (see DEPLOY-FREE.md).
+# The database is a free MySQL-compatible TiDB Cloud Starter instance (see DEPLOY-FREE.md).
 services:
   - type: web
     name: lasu-safety-watch
@@ -40,5 +40,5 @@ services:
         sync: false
       - key: DB_PASSWORD
         sync: false
-      - key: MYSQL_SSL_CA_CERT  # Aiven "CA certificate" (full text)
-        sync: false
+      - key: MYSQL_ATTR_SSL_CA   # TiDB needs TLS; its CA is in the system bundle
+        value: /etc/ssl/certs/ca-certificates.crt

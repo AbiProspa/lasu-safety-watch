@@ -88,15 +88,15 @@ C = [
     ("h", "5. Technologies used"),
     ("p", "PHP 8.3 and Laravel 12 (backend) · MySQL (database; SQLite for local testing) · Blade, Tailwind "
           "CSS 4 and Alpine.js (interface) · Leaflet and OpenStreetMap (maps) · Chart.js (charts) · Vite (asset build) "
-          "· Docker, Render and Aiven MySQL (free deployment). Automated tests: 8 feature tests (php artisan test) covering "
+          "· Docker, Render and TiDB Cloud MySQL (free deployment). Automated tests: 8 feature tests (php artisan test) covering "
           "reporting, anonymity, SOS, role permissions and the update workflow.", None),
 
     ("h", "6. Running and deploying"),
     ("p", " composer install → npm install → npm run build → php artisan migrate:fresh --seed → "
           "php artisan serve, then open http://127.0.0.1:8000. Admin login: admin@lasu.test / Admin@1234.",
      "On your PC:"),
-    ("p", " the code is on GitHub; Render (free) builds the Dockerfile and runs the site, and Aiven (free) "
-          "provides the MySQL database over an encrypted connection. On every start the app runs the migrations and "
+    ("p", " the code is on GitHub; Render (free) builds the Dockerfile and runs the site at https://lasu-safety-watch.onrender.com, and TiDB Cloud (free) "
+          "provides the MySQL-compatible database over an encrypted connection. On every start the app runs the migrations and "
           "creates the categories and staff accounts automatically (steps in DEPLOY-FREE.md).", "Online (free):"),
     ("p", " change all demo passwords, put the real LASU phone numbers and landmark coordinates in "
           "config/lsw.php, and set SEED_DEMO_REPORTS=false.", "Before going live:"),

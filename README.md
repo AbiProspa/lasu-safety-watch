@@ -39,7 +39,7 @@ These are demo passwords. Change them before real use.
 
 ## Deploy
 
-- **Free:** Render + Aiven MySQL, see [DEPLOY-FREE.md](DEPLOY-FREE.md).
+- **Live (free):** https://lasu-safety-watch.onrender.com, on Render + TiDB Cloud (MySQL). See [DEPLOY-FREE.md](DEPLOY-FREE.md).
 - **Paid (always on):** Railway, see [DEPLOY-RAILWAY.md](DEPLOY-RAILWAY.md).
 
 ## Where things are
