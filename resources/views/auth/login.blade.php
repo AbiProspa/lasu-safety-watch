@@ -4,8 +4,8 @@
 @section('content')
 <div class="container-app grid max-w-5xl items-center gap-10 py-14 lg:grid-cols-2">
     <div class="hidden lg:block">
-        <div class="rounded-3xl bg-gradient-to-br from-brand-800 to-brand-950 p-10 text-white">
-            <x-icon name="shield" class="size-12 text-brand-200" />
+        <div class="rounded-3xl bg-brand-700 p-10 text-white">
+            <span class="inline-block rounded-2xl bg-white p-2"><img src="{{ asset('images/logo-mark.png') }}" alt="LASU Safety Watch crest" class="h-16 w-auto"></span>
             <h2 class="mt-6 text-3xl font-extrabold">Welcome back</h2>
             <p class="mt-3 text-brand-100/80">Students track their reports. Security, Works, Medical and Counselling staff manage incidents from the dashboard.</p>
             <ul class="mt-8 space-y-3 text-sm text-brand-100/90">
