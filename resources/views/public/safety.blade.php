@@ -9,11 +9,13 @@
     $support = $contacts->where('level', '!=', 'critical');
 @endphp
 
-<section class="border-b border-line bg-surface">
-    <div class="container-app py-10 sm:py-12">
-        <p class="text-sm font-semibold text-muted">Safety Center</p>
-        <h1 class="mt-2 text-3xl font-extrabold leading-[1.1] tracking-[-0.03em] text-ink sm:text-4xl">Get help fast</h1>
-        <p class="mt-3 max-w-2xl text-lg text-muted">If you are in danger now, press SOS. For everything else, call the right unit or file a report.</p>
+<section class="border-b border-line bg-white">
+    <div class="container-app flex flex-col gap-1 py-5 sm:flex-row sm:items-center sm:justify-between sm:gap-6">
+        <h1 class="text-2xl font-extrabold leading-tight tracking-[-0.03em] text-ink sm:text-3xl">Get help fast</h1>
+        <p class="text-sm text-muted sm:text-base">
+            In danger now? Press <b class="text-ink">SOS</b>. Otherwise call a unit below or
+            <a href="{{ route('report.create') }}" class="font-semibold text-brand-500 underline-offset-4 hover:underline">file a report</a>.
+        </p>
     </div>
 </section>
 
