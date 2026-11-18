@@ -1,0 +1,58 @@
+@import 'leaflet/dist/leaflet.css';
+@import 'tailwindcss';
+
+@source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
+@source '../../storage/framework/views/*.php';
+@source '../**/*.blade.php';
+@source '../**/*.js';
+@source '../../config/lsw.php';
+
+@theme {
+    --font-sans: 'Plus Jakarta Sans', ui-sans-serif, system-ui, sans-serif;
+    --color-brand-50: #ecfdf5;
+    --color-brand-100: #d1fae5;
+    --color-brand-200: #a7f3d0;
+    --color-brand-500: #10b981;
+    --color-brand-600: #0b8a5f;
+    --color-brand-700: #0b6e4f;
+    --color-brand-800: #075e43;
+    --color-brand-900: #053f2e;
+    --color-brand-950: #032a1f;
+}
+
+@layer base {
+    html { scroll-behavior: smooth; }
+    body { @apply bg-slate-50 text-slate-800 antialiased; }
+    [x-cloak] { display: none !important; }
+}
+
+@utility container-app { @apply mx-auto w-full max-w-7xl px-4 sm:px-6 lg:px-8; }
+@utility card { @apply rounded-2xl border border-slate-200/70 bg-white shadow-sm; }
+@utility btn { @apply inline-flex items-center justify-center gap-2 rounded-xl px-4 py-2.5 text-sm font-semibold transition focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-60 cursor-pointer; }
+@utility btn-primary { @apply btn bg-brand-700 text-white shadow-sm hover:bg-brand-800 focus-visible:ring-brand-600; }
+@utility btn-danger { @apply btn bg-red-600 text-white shadow-sm hover:bg-red-700 focus-visible:ring-red-500; }
+@utility btn-light { @apply btn border border-slate-200 bg-white text-slate-700 hover:bg-slate-50 focus-visible:ring-slate-400; }
+@utility btn-ghost { @apply btn text-slate-600 hover:bg-slate-100; }
+@utility label { @apply mb-1.5 block text-sm font-semibold text-slate-700; }
+@utility input { @apply block w-full rounded-xl border border-slate-300 bg-white px-3.5 py-2.5 text-sm text-slate-800 shadow-sm placeholder:text-slate-400 focus:border-brand-600 focus:ring-4 focus:ring-brand-100 focus:outline-none; }
+@utility error { @apply mt-1 text-xs font-medium text-red-600; }
+@utility badge { @apply inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-semibold; }
+@utility nav-link { @apply rounded-lg px-3 py-2 text-sm font-medium text-slate-600 transition hover:bg-slate-100 hover:text-slate-900; }
+@utility nav-link-active { @apply bg-brand-50 text-brand-800; }
+@utility side-link { @apply flex items-center gap-3 rounded-xl px-3 py-2.5 text-sm font-medium text-brand-100/80 transition hover:bg-white/10 hover:text-white; }
+@utility side-link-active { @apply bg-white/15 text-white; }
+
+/* SOS pulse */
+@keyframes sos-pulse {
+    0% { box-shadow: 0 0 0 0 rgb(220 38 38 / 0.55); }
+    70% { box-shadow: 0 0 0 22px rgb(220 38 38 / 0); }
+    100% { box-shadow: 0 0 0 0 rgb(220 38 38 / 0); }
+}
+.sos-pulse { animation: sos-pulse 2s infinite; }
+
+.leaflet-container { font-family: inherit; }
+.lsw-pin {
+    width: 18px; height: 18px; border-radius: 9999px; border: 3px solid #fff;
+    box-shadow: 0 2px 6px rgb(0 0 0 / .35);
+}
+.leaflet-popup-content-wrapper { border-radius: 14px; }

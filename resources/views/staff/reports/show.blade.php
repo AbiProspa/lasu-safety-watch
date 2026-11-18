@@ -1,0 +1,102 @@
+@extends('layouts.staff')
+@php $title = 'Report '.$report->reference; @endphp
+
+@section('content')
+<a href="{{ route('staff.reports.index') }}" class="text-sm font-semibold text-slate-500 hover:text-slate-800">← Back to reports</a>
+
+<div class="mt-4 grid gap-6 xl:grid-cols-3">
+    <div class="space-y-6 xl:col-span-2">
+        <div class="card p-6">
+            <div class="flex flex-wrap items-center gap-2">
+                @if ($report->is_sos)<span class="badge bg-red-600 text-white"><x-icon name="siren" class="size-3.5" />SOS ALERT</span>@endif
+                <span class="badge text-white" style="background: {{ $report->category->color }}">{{ $report->category->name }}</span>
+                @if ($report->subtype)<span class="badge bg-slate-100 text-slate-700">{{ $report->subtype }}</span>@endif
+                <x-severity-badge :severity="$report->severity" />
+                <x-status-badge :status="$report->status" />
+            </div>
+            <h2 class="mt-3 text-2xl font-extrabold text-slate-900">{{ $report->title }}</h2>
+            <p class="mt-3 whitespace-pre-line text-slate-700">{{ $report->description }}</p>
+
+            <dl class="mt-6 grid gap-4 rounded-xl bg-slate-50 p-4 text-sm sm:grid-cols-2">
+                <div><dt class="text-slate-500">Reference</dt><dd class="font-mono font-bold text-slate-900">{{ $report->reference }}</dd></div>
+                <div><dt class="text-slate-500">Location</dt><dd class="font-semibold text-slate-900">{{ $report->location_name }}</dd></div>
+                <div><dt class="text-slate-500">Happened</dt><dd class="font-semibold text-slate-900">{{ $report->occurred_at?->format('d M Y, g:ia') ?? '-' }}</dd></div>
+                <div><dt class="text-slate-500">Reported</dt><dd class="font-semibold text-slate-900">{{ $report->created_at->format('d M Y, g:ia') }}</dd></div>
+                <div><dt class="text-slate-500">Reporter</dt><dd class="font-semibold text-slate-900">{{ $report->reporterName() }} @if($report->is_anonymous)<x-icon name="eye-off" class="inline size-4 text-slate-400" />@endif</dd></div>
+                <div><dt class="text-slate-500">Follow-up contact</dt><dd class="font-semibold text-slate-900">{{ $report->reporter_contact ?: ($report->is_anonymous ? '-' : ($report->reporter?->phone ?? $report->reporter?->email ?? '-')) }}</dd></div>
+            </dl>
+
+            @if ($report->photo_path)
+                <a href="{{ asset('storage/'.$report->photo_path) }}" target="_blank" class="mt-6 block">
+                    <img src="{{ asset('storage/'.$report->photo_path) }}" alt="Evidence photo" class="max-h-96 rounded-xl border border-slate-200 object-cover">
+                </a>
+            @endif
+        </div>
+
+        @if ($report->latitude)
+            <div class="card overflow-hidden" x-data="miniMap({{ $report->latitude }}, {{ $report->longitude }}, '{{ $report->category->color }}')">
+                <div x-ref="map" class="h-72 w-full"></div>
+                <div class="flex items-center justify-between px-5 py-3 text-sm">
+                    <span class="text-slate-500">{{ number_format($report->latitude, 5) }}, {{ number_format($report->longitude, 5) }}</span>
+                    <a target="_blank" href="https://www.google.com/maps/dir/?api=1&destination={{ $report->latitude }},{{ $report->longitude }}" class="font-semibold text-brand-700">Get directions →</a>
+                </div>
+            </div>
+        @endif
+
+        <div class="card p-6">
+            <h3 class="font-bold text-slate-900">Activity timeline</h3>
+            <ol class="relative mt-5 space-y-5 border-l-2 border-slate-100 pl-6">
+                @foreach ($report->updates as $u)
+                    <li class="relative">
+                        <span class="absolute -left-[31px] top-1 size-3.5 rounded-full border-2 border-white {{ $u->is_internal ? 'bg-amber-500 ring-amber-100' : 'bg-brand-600 ring-brand-100' }} ring-2"></span>
+                        <div class="flex flex-wrap items-center gap-2">
+                            <span class="text-sm font-semibold text-slate-900">{{ $u->user?->name ?? 'Reporter' }}</span>
+                            @if ($u->is_internal)<span class="badge bg-amber-100 text-amber-800"><x-icon name="lock" class="size-3" />Internal</span>@endif
+                            <span class="text-xs text-slate-400">{{ $u->created_at->format('d M, g:ia') }}</span>
+                        </div>
+                        <p class="mt-0.5 text-sm text-slate-600">{{ $u->note }}</p>
+                    </li>
+                @endforeach
+            </ol>
+        </div>
+    </div>
+
+    {{-- Action panel --}}
+    <div>
+        <form method="POST" action="{{ route('staff.reports.update', $report) }}" class="card sticky top-24 space-y-4 p-6">
+            @csrf @method('PATCH')
+            <h3 class="font-bold text-slate-900">Take action</h3>
+            <div>
+                <label class="label" for="status">Status</label>
+                <select id="status" name="status" class="input">
+                    @foreach (config('lsw.statuses') as $k => $v)<option value="{{ $k }}" @selected($report->status === $k)>{{ $v }}</option>@endforeach
+                </select>
+            </div>
+            <div>
+                <label class="label" for="severity">Severity</label>
+                <select id="severity" name="severity" class="input">
+                    @foreach (config('lsw.severities') as $k => $v)<option value="{{ $k }}" @selected($report->severity === $k)>{{ $v }}</option>@endforeach
+                </select>
+            </div>
+            <div>
+                <label class="label" for="assigned_to">Assign officer</label>
+                <select id="assigned_to" name="assigned_to" class="input">
+                    <option value="">Unassigned</option>
+                    @foreach ($officers as $o)<option value="{{ $o->id }}" @selected($report->assigned_to === $o->id)>{{ $o->name }} ({{ $o->roleLabel() }})</option>@endforeach
+                </select>
+            </div>
+            <div>
+                <label class="label" for="note">Update note</label>
+                <textarea id="note" name="note" rows="4" class="input" placeholder="e.g. Officers dispatched; suspect handed to police."></textarea>
+            </div>
+            <label class="flex items-start gap-2 text-sm text-slate-600">
+                <input type="hidden" name="is_internal" value="0">
+                <input type="checkbox" name="is_internal" value="1" class="mt-0.5 rounded border-slate-300 text-amber-600">
+                <span><b>Internal note</b>: hidden from the reporter's tracking page</span>
+            </label>
+            <button class="btn-primary w-full">Save update</button>
+            <p class="text-center text-xs text-slate-400">Handled by {{ $report->category->unitLabel() }}</p>
+        </form>
+    </div>
+</div>
+@endsection
